@@ -1,0 +1,42 @@
+version: '3.6'
+
+services:
+  mongodb:
+    image: mongo:4.2.3-bionic
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_DATABASE=secret-number
+      - MONGO_INITDB_ROOT_USERNAME=secret-number
+      - MONGO_INITDB_ROOT_PASSWORD=aexuDo1noo4s
+    volumes:
+      # scripts
+      - ./mongo-entrypoint:/docker-entrypoint-initdb.d
+      # named volumes
+      - mongodb:/data/db
+      - mongoconfig:/data/configdb
+    networks:
+      - mongo_net
+
+  back:
+    # build will get tagged with 'image'
+    build: ../back
+    container_name: my-mongoclient
+    environment:
+      - DB_NAME=secret-number
+      - DB_HOST=mongodb
+      - DB_PORT=secret-number
+      - DB_USER=secret-number
+      - DB_PASSWORD=aexuDo1noo4s
+    networks:
+      - mongo_net
+    depends_on:
+      - mongodb
+
+volumes:
+  mongodb:
+  mongoconfig:
+
+networks:
+  mongo_net:
