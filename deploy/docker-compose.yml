@@ -20,9 +20,7 @@ services:
       - mongo_net
 
   back:
-    # build will get tagged with 'image'
     build: ../back
-    container_name: my-mongoclient
     environment:
       - DB_NAME=secret-number
       - DB_HOST=mongodb
@@ -33,6 +31,17 @@ services:
       - mongo_net
     depends_on:
       - mongodb
+
+
+  front:
+    # build will get tagged with 'image'
+    build: ../front
+    environment:
+      - API_URL=ws://localhost:3000
+    networks:
+      - mongo_net
+    depends_on:
+      - back
 
 volumes:
   mongodb:
